@@ -3,11 +3,64 @@
 <head>
 	<meta charset="UTF-8">
 	<title>kombucha locker</title>
+	<link rel="stylesheet" href="./main.css">
 </head>
-<body>
-	<h3>kombucha locker</h3>
-	<button id="js-getAllKombuchas">get all kombuchas</button>
-	
+<body class="body">
+
+	<div class="container">
+		<div class="row">
+			<div class="form col-6">
+				<h3>kombucha locker</h3>
+				<div class="section section-add">
+					<div class="formGroup">
+						<label class="label" for="">Name:</label>
+						<input class="input" type="text">
+					</div>
+					<div class="formGroup">
+						<label class="label" for="">Type:</label>
+						<input class="input" type="text">
+					</div>
+					<div class="formGroup">
+						<label class="label" for="">Quantity:</label>
+						<input class="input" type="text">
+					</div>
+					<button class="button">Add</button>
+				</div>
+
+				<div class="section section-update">
+					<div class="formGroup">
+						<label class="label" for="">Name:</label>
+						<input class="input" type="text">
+					</div>
+					<div class="formGroup">
+						<label class="label" for="">Type:</label>
+						<input class="input" type="text">
+					</div>
+					<div class="formGroup">
+						<label class="label" for="">Quantity:</label>
+						<input class="input" type="text">
+					</div>
+					<button class="button">Update</button>
+				</div>
+				
+				<div class="section section-delete">
+					<div class="formGroup">
+						<label class="label" for="">Name:</label>
+						<input class="input" type="text">
+					</div>
+					<button class="button">Delete</button>
+				</div>
+
+			</div>
+
+			<div class="list col-6">
+				
+			</div>
+
+		</div>
+
+	</div>
+
 	<script src="./main.js"></script>
 </body>
 </html>
