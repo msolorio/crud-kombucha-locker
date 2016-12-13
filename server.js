@@ -27,6 +27,7 @@ mongoose.connect('mongodb://localhost:27017/kombuchalocker');
 // http://localhost:3000/api
 router.get('/', (req, res) => {
 	res.json({ message: 'You are running dangerously low on kombucha' });
+	// res.sendFile(__dirname + '/public/');
 });
 
 // create a new route with prefix /kombuchas
@@ -107,6 +108,9 @@ kombuchaRoute.delete((req, res) => {
 
 // Register all our routes with /api
 app.use('/api', router);
+
+// send our public files
+app.use(express.static('public'));
 
 // Start the server
 // @ http://localhost:3000/api
