@@ -20,6 +20,9 @@ const port = process.env.PORT || 3000;
 // create our express router
 const router = express.Router();
 
+// resolve warning (mongoose's default promise library is deprecated)
+mongoose.Promise = global.Promise;
+
 // Commect to kombucha locker mongoDB
 mongoose.connect('mongodb://localhost:27017/kombuchalocker');
 

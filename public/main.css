@@ -2,6 +2,7 @@
 	font-family: arial;
 }
 
+/* layout begin */
 .container {
 	margin: 0 auto;
 	padding: 0 15px;
@@ -12,11 +13,21 @@
 	margin: 0 -15px;
 }
 
-.col-6 {
-	width: 50%;
+.col-12 {
 	padding: 0 15px;
 }
 
+.col-6 {
+	float: left;
+	width: 50%;
+	padding: 0 15px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkip-box-sizing: border-box;
+}
+/* layout end */
+
+/* form begin */
 .section {
 	margin-bottom: 20px;
 }
@@ -42,3 +53,14 @@
 	-webkit-border-radiua: 4px;
 	font-size: 16px;
 }
+/* form end */
+
+/* kombucha list begin */
+.kombuchaEntry {
+	margin-bottom: 20px;
+}
+
+.kombuchaProp {
+	margin: 0 0 3px;
+}
+/* kombucha list end */
