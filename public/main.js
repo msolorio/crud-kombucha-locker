@@ -14,7 +14,9 @@ const Kombuchas = {
 
 		// delete form elements
 		this.buttonDelete = document.getElementById('js-button-delete');
+		this.nameDelete = document.getElementById('js-name-delete');
 
+		this.kombuchaEntries = document.getElementsByClassName('kombuchaEntry');
 	},
 
 	loadKombuchas() {
@@ -51,6 +53,7 @@ const Kombuchas = {
 
 			// add classes
 			kombuchaEl.className = 'kombuchaEntry';
+			kombuchaEl.dataset.entryname = response[i].name;
 			kombuchaName.className = 'kombuchaProp kombuchaName';
 			kombuchaType.className = 'kombuchaProp kombuchaType';
 			kombuchaQuantity.className = 'kombuchaProp kombuchaQuantity';
@@ -96,12 +99,13 @@ const Kombuchas = {
 
 				// add classes
 				kombuchaEl.className = 'kombuchaEntry';
+				kombuchaEl.dataset.entryname = response.data.name;
 				kombuchaName.className = 'kombuchaProp kombuchaName';
 				kombuchaType.className = 'kombuchaProp kombuchaType';
 				kombuchaQuantity.className = 'kombuchaProp kombuchaQuantity';
 
 				// add id to entry
-				kombuchaEl.id = response.data._id;
+				// kombuchaEl.id = response.data._id;
 
 				kombuchaEl.appendChild(kombuchaName);
 				kombuchaEl.appendChild(kombuchaType);
@@ -124,7 +128,39 @@ const Kombuchas = {
 	},
 
 	deleteKombucha() {
-		console.log('in deleteKombuchas()');
+		nameDeleteVal = this.nameDelete.value;
+		let idToDelete;
+
+		const removeFromDom = () => {
+			let kombuchaEntries = this.kombuchaEntries;
+			const kombuchaList = this.kombuchaList;
+			for (let i=0, j=kombuchaEntries.length; i<j; i++) {
+				let entryToRemove = kombuchaEntries[i];
+				let entryName = kombuchaEntries[i].dataset.entryname;
+				if (nameDeleteVal == entryName) {
+					entryToRemove.parentNode.removeChild(entryToRemove);
+					idToDelete = entryToRemove.id;
+					return;
+				}
+			}
+		}
+
+		const removeFromMongo = () => {
+			const xhr = new XMLHttpRequest();
+			const processRequest = () => {
+				if (xhr.readyState === 4 && xhr.status === 200) {
+					console.log('delete request was processed');
+					this.nameDelete.value = "";
+				}
+			}
+			xhr.open('DELETE', `/api/kombuchas/${idToDelete}`, true);
+			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhr.send();
+			xhr.onreadystatechange = processRequest;
+		}
+
+		removeFromDom();
+		removeFromMongo();
 	},
 
 	addListeners() {
