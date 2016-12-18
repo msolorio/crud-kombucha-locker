@@ -11,6 +11,9 @@ const Kombuchas = {
 
 		// update form elements
 		this.buttonUpdate = document.getElementById('js-button-update');
+		this.nameUpdate = document.getElementById('js-name-update');
+		this.typeUpdate = document.getElementById('js-type-update');
+		this.quantityUpdate = document.getElementById('js-quantity-update');
 
 		// delete form elements
 		this.buttonDelete = document.getElementById('js-button-delete');
@@ -72,12 +75,12 @@ const Kombuchas = {
 
 	addKombucha() {
 		console.log('in addKombucha()');
-		nameAddVal = this.nameAdd.value;
-		typeAddVal = this.typeAdd.value;
-		quantityAddVal = this.quantityAdd.value;
+		const nameAddVal = this.nameAdd.value;
+		const typeAddVal = this.typeAdd.value;
+		const quantityAddVal = this.quantityAdd.value;
 
 		const params = `name=${nameAddVal}&type=${typeAddVal}&quantity=${quantityAddVal}`;
-		console.log()
+
 		const xhr = new XMLHttpRequest();
 
 		const processRequest = () => {
@@ -105,12 +108,16 @@ const Kombuchas = {
 				kombuchaQuantity.className = 'kombuchaProp kombuchaQuantity';
 
 				// add id to entry
-				// kombuchaEl.id = response.data._id;
+				kombuchaEl.id = response.data._id;
 
 				kombuchaEl.appendChild(kombuchaName);
 				kombuchaEl.appendChild(kombuchaType);
 				kombuchaEl.appendChild(kombuchaQuantity);
 				this.kombuchaList.appendChild(kombuchaEl);
+
+				this.nameAdd.value = "";
+				this.typeAdd.value = "";
+				this.quantityAdd.value = "";
 			}
 		};
 
@@ -118,31 +125,77 @@ const Kombuchas = {
 		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		xhr.send(params);
 		xhr.onreadystatechange = processRequest;
-
-		// this.loadKombuchas();
-
 	},
 
 	updateKombucha() {
 		console.log('in updateKombucha()');
+		const buttonupdate = this.buttonUpdate;
+		const nameUpdateVal = this.nameUpdate.value;
+		const typeUpdateVal = this.typeUpdate.value;
+		const quantityUpdateVal = this.quantityUpdate.value;
+		const kombuchaEntries = this.kombuchaEntries;
+		let idToUpdate;
+		let kombuchaType;
+		let kombuchaQuantity;
+
+		for (let i=0, j=kombuchaEntries.length; i<j; i++) {
+				let entryName = kombuchaEntries[i].dataset.entryname;
+				if (nameUpdateVal === entryName) {
+					idToUpdate = kombuchaEntries[i].id;
+					console.log('idToUpdate:', idToUpdate);
+					kombuchaType = kombuchaEntries[i].querySelector('.kombuchaType');
+					kombuchaQuantity = kombuchaEntries[i].querySelector('.kombuchaQuantity');
+					break;
+				}
+			}
+
+		const updateDom = () => {
+			console.log('in updateDom');
+			kombuchaType.innerHTML = `Type: ${typeUpdateVal}`;
+			kombuchaQuantity.innerHTML = `Quantity: ${quantityUpdateVal}`;
+			this.nameUpdate.value = "";
+			this.typeUpdate.value = "";
+			this.quantityUpdate.value = "";
+		}
+
+		const updateMongo = () => {
+			const params = `name=${nameUpdateVal}&type=${typeUpdateVal}&quantity=${quantityUpdateVal}`;
+
+			const xhr = new XMLHttpRequest();
+			const processRequest = () => {
+				if (xhr.readyState === 4 && xhr.status === 200) {
+					console.log('put request was successful');
+					updateDom();
+				}
+			}
+			xhr.open('PUT', `/api/kombuchas/${idToUpdate}`);
+			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhr.send(params);
+			xhr.onreadystatechange = processRequest;
+		}
+
+		updateMongo();
 	},
 
 	deleteKombucha() {
-		nameDeleteVal = this.nameDelete.value;
+		console.log('in deleteKombucha')
+		const nameDeleteVal = this.nameDelete.value;
+		const kombuchaEntries = this.kombuchaEntries;
+		let entryToRemove;
 		let idToDelete;
 
-		const removeFromDom = () => {
-			let kombuchaEntries = this.kombuchaEntries;
-			const kombuchaList = this.kombuchaList;
-			for (let i=0, j=kombuchaEntries.length; i<j; i++) {
-				let entryToRemove = kombuchaEntries[i];
+		for (let i=0, j=kombuchaEntries.length; i<j; i++) {
 				let entryName = kombuchaEntries[i].dataset.entryname;
-				if (nameDeleteVal == entryName) {
-					entryToRemove.parentNode.removeChild(entryToRemove);
+				if (nameDeleteVal === entryName) {
+					entryToRemove = kombuchaEntries[i];
 					idToDelete = entryToRemove.id;
-					return;
+					break;
 				}
 			}
+
+		const removeFromDom = () => {
+			entryToRemove.parentNode.removeChild(entryToRemove);
+			this.nameDelete.value = "";
 		}
 
 		const removeFromMongo = () => {
@@ -150,7 +203,7 @@ const Kombuchas = {
 			const processRequest = () => {
 				if (xhr.readyState === 4 && xhr.status === 200) {
 					console.log('delete request was processed');
-					this.nameDelete.value = "";
+					removeFromDom();
 				}
 			}
 			xhr.open('DELETE', `/api/kombuchas/${idToDelete}`, true);
@@ -159,7 +212,6 @@ const Kombuchas = {
 			xhr.onreadystatechange = processRequest;
 		}
 
-		removeFromDom();
 		removeFromMongo();
 	},
 

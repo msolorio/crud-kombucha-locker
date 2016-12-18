@@ -88,8 +88,9 @@ kombuchaRoute.put((req, res) => {
 	Kombucha.findById(req.params.kombucha_id, (err, kombucha) => {
 		if (err) res.send(err);
 
-		// update existing kombucha quantity
+		// update existing kombucha quantity and type based on given name
 		kombucha.quantity = req.body.quantity;
+		kombucha.type = req.body.type;
 
 		// save method from mongoose to save the kombucha and check for errors
 		kombucha.save((err) => {
